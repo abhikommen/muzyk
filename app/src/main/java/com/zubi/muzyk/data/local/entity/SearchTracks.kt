@@ -1,6 +1,5 @@
 package com.zubi.muzyk.data.local.entity
 
-
 import com.google.gson.annotations.SerializedName
 
 data class SearchTracks(

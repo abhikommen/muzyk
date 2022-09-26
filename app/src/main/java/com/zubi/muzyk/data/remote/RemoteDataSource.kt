@@ -1,9 +1,6 @@
 package com.zubi.muzyk.data.remote
 
-import com.zubi.muzyk.data.local.entity.SearchEntity
-import com.zubi.muzyk.data.local.entity.SimilarTrackEntity
-import com.zubi.muzyk.data.local.entity.Track
-import com.zubi.muzyk.data.local.entity.UserEntity
+import com.zubi.muzyk.data.local.entity.*
 
 interface RemoteDataSource {
 
@@ -14,10 +11,15 @@ interface RemoteDataSource {
 
     suspend fun getSearchQuery(
         query: String
-    ): SearchEntity
+    ): List<NewTrack>
 
 
-    suspend fun getTrendingChart(): List<Track>
-
+    suspend fun getTrendingChart(): List<ChartsEntity>
     suspend fun registerUser(token: String): UserEntity
+    suspend fun getWeirdSongs(song : String) : List<WeirdSongEntity>
+    suspend fun getUser() : NewUser
+
+    suspend fun getTopArtists() : List<ArtistEntity>
+    suspend fun getTopTracks() : List<NewTrack>
+
 }

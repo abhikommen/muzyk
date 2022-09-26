@@ -1,9 +1,6 @@
 package com.zubi.muzyk.data.remote
 
-import com.zubi.muzyk.data.local.entity.SearchEntity
-import com.zubi.muzyk.data.local.entity.SimilarTrackEntity
-import com.zubi.muzyk.data.local.entity.Track
-import com.zubi.muzyk.data.local.entity.UserEntity
+import com.zubi.muzyk.data.local.entity.*
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,17 +11,32 @@ interface ApiService {
         @Query("token") token: String
     ): UserEntity
 
-    @GET("similar_tracks")
+    @GET("api/similar_tracks")
     suspend fun getSimilarTracks(
-        @Query("track_id") trackId: String,
+        @Query("id") trackId: String,
     ): SimilarTrackEntity
 
-    @GET("search")
+    @GET("api/search")
     suspend fun getSearch(
-        @Query("search") query: String,
-    ): SearchEntity
+        @Query("query") query: String,
+    ): List<NewTrack>
 
-    @GET("charts")
-    suspend fun getTrendingChart(): List<Track>
+    @GET("api/charts")
+    suspend fun getTrendingChart(): List<ChartsEntity>
+
+    @GET("api/weird")
+    suspend fun getWeirdSongs(
+        @Query("text") song: String
+    ): List<WeirdSongEntity>
+
+    @GET("api/me")
+    suspend fun getUser(): NewUser
+
+    @GET("api/top/artists")
+    suspend fun getTopArtists(): List<ArtistEntity>
+
+    @GET("api/top/tracks")
+    suspend fun getTopTracks(): List<NewTrack>
+
 
 }

@@ -3,6 +3,7 @@ package com.zubi.muzyk
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
@@ -15,6 +16,7 @@ import com.spotify.sdk.android.auth.AuthorizationResponse
 import com.zubi.muzyk.data.MainBody
 import com.zubi.muzyk.ui.theme.AnimeQuotesTheme
 import com.zubi.muzyk.util.LocalMediaPlayer
+import com.zubi.muzyk.util.LoginStatus
 import com.zubi.muzyk.util.SPOTIFY_REQUEST_CODE
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,11 +50,15 @@ class MainActivity : ComponentActivity() {
 
         // Check if result comes from the correct activity
         if (requestCode == SPOTIFY_REQUEST_CODE) {
+
             val response = AuthorizationClient.getResponse(resultCode, intent)
             when (response.type) {
                 AuthorizationResponse.Type.TOKEN -> {
                     val token = response.accessToken
+                    Log.d("SPOTIFY", token)
+                    Log.d("SPOTIFYEXPIRY", "" + response.expiresIn)
                     mainViewModel.saveToken(token)
+                    mainViewModel.loginState.value = LoginStatus.SUCCESS
                 }
                 AuthorizationResponse.Type.ERROR -> {}
                 else -> {}

@@ -18,9 +18,9 @@ import coil.request.ImageRequest
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
-import com.zubi.muzyk.data.local.entity.SearchEntity
-import com.zubi.muzyk.data.local.entity.SimilarTrackEntity
-import com.zubi.muzyk.data.local.entity.Track
+import com.spotify.sdk.android.auth.app.SpotifyAuthHandler
+import com.spotify.sdk.android.auth.app.SpotifyNativeAuthUtil
+import com.zubi.muzyk.data.local.entity.*
 import com.zubi.muzyk.data.repo.Repo
 import com.zubi.muzyk.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,14 +31,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val repo: Repo
+    private val repo: Repo
 ) : ViewModel() {
 
+    var selectedWeirdSpotify: MutableState<WeirdSongEntity?> = mutableStateOf(null)
 
-    private val _searchQueryList: MutableState<DataState<SearchEntity>> =
+    private val _searchQueryList: MutableState<DataState<List<NewTrack>>> =
         mutableStateOf(value = DataState.Loading)
 
-    var searchQueryList: State<DataState<SearchEntity>> = _searchQueryList
+    var searchQueryList: State<DataState<List<NewTrack>>> = _searchQueryList
+
+    val loginState = mutableStateOf(LoginStatus.LOADING)
 
     fun getColorPaletteState(context: Context, url: String): State<Palette?> {
         val mutableStateOfColor = mutableStateOf<Palette?>(null)
@@ -89,7 +92,39 @@ class MainViewModel @Inject constructor(
 
     val getRecentSearchLocal = repo.getRecentTracksLocal()
 
-    val getTrendingCharts = repo.getTrendingChart()
+
+    fun getTrendingCharts(): State<DataState<List<ChartsEntity>>> {
+        val chartsEntity =
+            mutableStateOf<DataState<List<ChartsEntity>>>(value = DataState.Loading)
+        viewModelScope.launch {
+            repo.getTrendingChart().collect {
+                chartsEntity.value = it
+            }
+        }
+        return chartsEntity
+    }
+
+    fun getTopArtists(): State<DataState<List<ArtistEntity>>> {
+        val artistsEntity =
+            mutableStateOf<DataState<List<ArtistEntity>>>(value = DataState.Loading)
+        viewModelScope.launch {
+            repo.getTopArtists().collect {
+                artistsEntity.value = it
+            }
+        }
+        return artistsEntity
+    }
+
+    fun getWeirdSongs(song: String): State<DataState<List<WeirdSongEntity>>> {
+        val chartsEntity =
+            mutableStateOf<DataState<List<WeirdSongEntity>>>(value = DataState.Loading)
+        viewModelScope.launch {
+            repo.getWeirdSongs(song).collect {
+                chartsEntity.value = it
+            }
+        }
+        return chartsEntity
+    }
 
 
     fun requestSpotifySignIn(activity: Activity) {
@@ -104,6 +139,18 @@ class MainViewModel @Inject constructor(
         AuthorizationClient.openLoginActivity(activity, SPOTIFY_REQUEST_CODE, request)
     }
 
+    fun getLoggedInUser(): State<DataState<NewUser>> {
+        val newUser =
+            mutableStateOf<DataState<NewUser>>(value = DataState.Loading)
+        viewModelScope.launch {
+            repo.getUser().collect {
+                newUser.value = it
+            }
+        }
+        return newUser
+    }
+
+
     fun saveToken(token: String) {
         SharedPref.saveStringVal(USER_TOKEN, token)
     }
@@ -113,6 +160,6 @@ class MainViewModel @Inject constructor(
     }
 
     fun isLogin(): Boolean = getToken() != null
-    
+
 
 }

@@ -1,10 +1,7 @@
 package com.zubi.muzyk.data.repo
 
 import com.zubi.muzyk.data.local.LocalDataSource
-import com.zubi.muzyk.data.local.entity.SearchEntity
-import com.zubi.muzyk.data.local.entity.SimilarTrackEntity
-import com.zubi.muzyk.data.local.entity.Track
-import com.zubi.muzyk.data.local.entity.UserEntity
+import com.zubi.muzyk.data.local.entity.*
 import com.zubi.muzyk.data.remote.RemoteDataSource
 import com.zubi.muzyk.util.DataState
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +23,7 @@ class RepoImpl @Inject constructor(
         }
     }
 
-    override fun getSearchQuery(query: String): Flow<DataState<SearchEntity>> = flow {
+    override fun getSearchQuery(query: String): Flow<DataState<List<NewTrack>>> = flow {
         emit(DataState.Loading)
         try {
             emit(DataState.Success(remoteDataSource.getSearchQuery(query = query)))
@@ -52,7 +49,7 @@ class RepoImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.Default)
 
-    override fun getTrendingChart(): Flow<DataState<List<Track>>> = flow {
+    override fun getTrendingChart(): Flow<DataState<List<ChartsEntity>>> = flow {
         emit(DataState.Loading)
         try {
             emit(DataState.Success(remoteDataSource.getTrendingChart()))
@@ -71,4 +68,44 @@ class RepoImpl @Inject constructor(
             emit(DataState.Error(e))
         }
     }
+
+    override fun getWeirdSongs(song: String): Flow<DataState<List<WeirdSongEntity>>> = flow {
+        emit(DataState.Loading)
+        try {
+            emit(DataState.Success(remoteDataSource.getWeirdSongs(song)))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        }
+    }
+
+    override fun getUser(): Flow<DataState<NewUser>> = flow {
+        emit(DataState.Loading)
+        try {
+            val user = remoteDataSource.getUser()
+            emit(DataState.Success(user))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        }
+    }
+
+    override fun getTopTracks(): Flow<DataState<List<NewTrack>>> = flow {
+        emit(DataState.Loading)
+        try {
+            val topTracks = remoteDataSource.getTopTracks()
+            emit(DataState.Success(topTracks))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        }
+    }
+
+    override fun getTopArtists(): Flow<DataState<List<ArtistEntity>>> = flow {
+        emit(DataState.Loading)
+        try {
+            val topArtists = remoteDataSource.getTopArtists()
+            emit(DataState.Success(topArtists))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        }
+    }
+
 }

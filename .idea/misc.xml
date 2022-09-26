@@ -9,6 +9,8 @@
         <entry key="app/src/main/res/drawable/ic_parental_advisory.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_spotify.xml" value="0.2972420837589377" />
         <entry key="app/src/main/res/layout/activity_spotify_login.xml" value="0.14673913043478262" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1685" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1685" />
       </map>
     </option>
   </component>

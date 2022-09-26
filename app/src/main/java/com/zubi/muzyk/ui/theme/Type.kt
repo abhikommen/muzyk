@@ -14,13 +14,11 @@ val signature = FontFamily(
 )
 
 val AvertaFont = FontFamily(
-    Font(R.font.averta_black, FontWeight.Black),
-    Font(R.font.averta_bold, FontWeight.Bold),
-    Font(R.font.averta_extrabold, FontWeight.ExtraBold),
-    Font(R.font.averta_light, FontWeight.Light),
-    Font(R.font.averta_regular, FontWeight.Normal),
-    Font(R.font.averta_semibold, FontWeight.SemiBold),
-    Font(R.font.averta_thin, FontWeight.Thin),
+    Font(R.font.euclid_bold, FontWeight.Bold),
+    Font(R.font.euclid_light, FontWeight.Light),
+    Font(R.font.euclid_regular, FontWeight.Normal),
+    Font(R.font.euclid_medium, FontWeight.Medium),
+    Font(R.font.euclid_light, FontWeight.Thin),
 )
 
 // Set of Material typography styles to start with
