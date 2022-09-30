@@ -1,5 +1,6 @@
 package com.zubi.muzyk.ui.screen.profile
 
+import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +29,7 @@ import com.zubi.muzyk.MainViewModel
 import com.zubi.muzyk.data.local.entity.ArtistEntity
 import com.zubi.muzyk.data.local.entity.NewUser
 import com.zubi.muzyk.ui.theme.APP_BACKGROUND
+import com.zubi.muzyk.ui.theme.APP_SEMI_BACKGROUND
 import com.zubi.muzyk.util.*
 
 @Composable
@@ -38,12 +40,11 @@ fun ProfileScreen(
 ) {
 
     Surface(
-        modifier = modifier.fillMaxSize(), color = APP_BACKGROUND
+        modifier = modifier.fillMaxSize(), color = APP_SEMI_BACKGROUND
     ) {
         val systemUiController = rememberSystemUiController()
         SideEffect {
-            systemUiController
-                .setStatusBarColor(Color.Transparent, darkIcons = true)
+            systemUiController.setStatusBarColor(Color.Transparent, darkIcons = true)
             systemUiController.setNavigationBarColor(Color.Transparent)
         }
         ProfileScreenBody(mainViewModel, navHostController)
@@ -62,14 +63,39 @@ fun ProfileScreenBody(
         mainViewModel.getLoggedInUser()
     }
 
-    LazyColumn(modifier = modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
         item {
             ProfileHeader(
-                currentUser,
-                mainViewModel = mainViewModel,
-                navHostController = navHostController
+                currentUser, mainViewModel = mainViewModel, navHostController = navHostController
             )
         }
+
+        item {
+
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            , horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                RecentPlayBox(
+                    mainViewModel = mainViewModel,
+                    navHostController = navHostController,
+                    modifier = Modifier
+                        .weight(0.4f)
+                )
+                Spacer(modifier = Modifier.weight(0.1f))
+                FavoriteArtist(
+                    mainViewModel = mainViewModel,
+                    navHostController = navHostController,
+                    modifier = Modifier
+                        .weight(0.4f)
+                )
+            }
+        }
+
     }
 }
 
@@ -147,8 +173,7 @@ fun ProfileInfo(newUser: NewUser, modifier: Modifier = Modifier) {
 
 @Composable
 fun ProfilePic(
-    newUser: NewUser,
-    modifier: Modifier = Modifier
+    newUser: NewUser, modifier: Modifier = Modifier
 ) {
 
     Column(

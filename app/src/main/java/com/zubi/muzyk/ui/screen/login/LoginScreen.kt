@@ -65,7 +65,7 @@ fun LoginScreen(
             .fillMaxSize()
     ) {
         AsyncImage(
-            model = R.drawable.login_bg,
+            model = R.drawable.new_bg,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomStart),
